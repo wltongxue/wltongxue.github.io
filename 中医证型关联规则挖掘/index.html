@@ -85,18 +85,32 @@
 
 
 
-<meta name="description" content="wltongxue的个人网站，希望给大家提供解决问题的方法和思考问题的模式。">
+<meta name="description" content="本章学习主要是针对如何挖掘数据之间的关联规则。如何离散化数据，使用Apriori关联规则算法，探索样本数据与预测结果直接的关联规则。">
 <meta name="keywords" content="数据挖掘,python,关联规则">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据挖掘实战3-中医证型关联规则挖掘">
 <meta property="og:url" content="http://yoursite.com/中医证型关联规则挖掘/index.html">
 <meta property="og:site_name" content="wltongxue">
-<meta property="og:description" content="wltongxue的个人网站，希望给大家提供解决问题的方法和思考问题的模式。">
+<meta property="og:description" content="本章学习主要是针对如何挖掘数据之间的关联规则。如何离散化数据，使用Apriori关联规则算法，探索样本数据与预测结果直接的关联规则。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-05T14:31:37.971Z">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/metadata.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/standard1.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/standard2.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/symptom.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/symptom2.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/symptom_data.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/score.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/score_data.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/model_data.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/apriori_process.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/transaction_set.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/lab_results.png">
+<meta property="og:image" content="http://yoursite.com/中医证型关联规则挖掘/model_results.png">
+<meta property="og:updated_time" content="2019-09-08T05:20:24.546Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据挖掘实战3-中医证型关联规则挖掘">
-<meta name="twitter:description" content="wltongxue的个人网站，希望给大家提供解决问题的方法和思考问题的模式。">
+<meta name="twitter:description" content="本章学习主要是针对如何挖掘数据之间的关联规则。如何离散化数据，使用Apriori关联规则算法，探索样本数据与预测结果直接的关联规则。">
+<meta name="twitter:image" content="http://yoursite.com/中医证型关联规则挖掘/metadata.png">
 
 
 
@@ -363,7 +377,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0
+                  1.8k
                 </span>
               
 
@@ -379,7 +393,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  7
                 </span>
               
             </div>
@@ -400,7 +414,27 @@
       
 
       
-        
+        <p>本章学习主要是针对如何挖掘数据之间的关联规则。如何离散化数据，使用Apriori关联规则算法，探索样本数据与预测结果直接的关联规则。<br><a id="more"></a></p>
+<blockquote>
+<p>问题背景：假设你是一个超帅的医生，诊断肿瘤，你需要根据不同的病人症状来判断症状间的关系，规律，在不同阶段给病人开药，提高他活命的机会。生病的症状有很多种，彼此之间也是有关系的，比如因为你感冒了，所以发烧了，咳嗽了，流鼻涕了。所以我们需要分析不同症状之间的关系和规律，在病情恶化前尽量截断。</p>
+</blockquote>
+<h1 id="一、挖掘目标"><a href="#一、挖掘目标" class="headerlink" title="一、挖掘目标"></a>一、挖掘目标</h1><p>1)    借助三阴乳腺癌的病理信息，挖掘患者的症状与中医证型之间的关联关系<br>2)    对截断治疗提供依据</p>
+<h1 id="二、数据抽取"><a href="#二、数据抽取" class="headerlink" title="二、数据抽取"></a>二、数据抽取</h1><p>1)    通过问卷获取患者个人信息<br>2)    通过问卷获取发病年龄、是否有各种症状等<br>如图是实际采集的数据：<br><img src="/中医证型关联规则挖掘/metadata.png" width="800" height="800"></p>
+<h1 id="三、数据预处理"><a href="#三、数据预处理" class="headerlink" title="三、数据预处理"></a>三、数据预处理</h1><p>1、    数据清洗：<br>由于是问卷调查，存在很多无效的问卷，所以根据数据是否有效进行筛选，筛选标准表如下：<br><img src="/中医证型关联规则挖掘/standard1.png" width="800" height="800"><br><img src="/中医证型关联规则挖掘/standard2.png" width="800" height="800"><br>2、    属性规约：（降维）<br>根据如下症状，去除与挖掘任务不相关的属性，选取6种证型得分和TNM<br><img src="/中医证型关联规则挖掘/symptom.png" width="800" height="800"><br><img src="/中医证型关联规则挖掘/symptom2.png" width="800" height="800"><br>规约后的数据：<br><img src="/中医证型关联规则挖掘/symptom_data.png" width="800" height="800"><br>3、    数据变换：</p>
+<ul>
+<li>1)属性构造<br>由于每种证型总分不相同，所以每种评分不是基于同一个标准，所以为了更好地反映证素的分布特征，采用证型系数代替证素得分，证型系数计算如下：<br>$证型系数=该证型得分/该证型总分$<br>ps:每个证型总得分为：<br><img src="/中医证型关联规则挖掘/score.png" width="800" height="800"><br>构造完毕的数据集如下：<br><img src="/中医证型关联规则挖掘/score_data.png" width="800" height="800"></li>
+<li>2)数据离散化<br>由于Apriori关联规则算法无法处理连续型数值变量，所以需要对数据进行离散化，这里采用聚类算法（请参考前面实验的<a href="https://wltongxue.github.io/K-Means聚类算法/" target="_blank" rel="noopener">K-Means</a>算法详解）对证型系数进行离散化。<br>聚类离散化代码实现：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="string">''</span><span class="string">'</span></span><br><span class="line"><span class="string">聚类离散化，最后的result的格式为：</span></span><br><span class="line"><span class="string">      1           2           3           4</span></span><br><span class="line"><span class="string">A     0    0.178698    0.257724    0.351843</span></span><br><span class="line"><span class="string">An  240  356.000000  281.000000   53.000000</span></span><br><span class="line"><span class="string">即(0, 0.178698]有240个，(0.178698, 0.257724]有356个，依此类推。</span></span><br><span class="line"><span class="string">'</span><span class="string">''</span></span><br><span class="line">from __future__ import print_function</span><br><span class="line">import pandas as pd</span><br><span class="line">from sklearn.cluster import KMeans <span class="comment">#导入K均值聚类算法</span></span><br><span class="line"></span><br><span class="line">datafile=<span class="string">'../data/data.xls'</span> <span class="comment">#待聚类的数据文件</span></span><br><span class="line">processedfile=<span class="string">'../tmp/data_processed.xls'</span><span class="comment">#数据处理后文件</span></span><br><span class="line">typelabel=&#123;u<span class="string">'肝气郁结证型系数'</span>:<span class="string">'A'</span>,u<span class="string">'热毒蕴结证型系数'</span>:<span class="string">'B'</span>,</span><br><span class="line">           u<span class="string">'冲任失调证型系数'</span>:<span class="string">'C'</span>,u<span class="string">'气血两虚证型系数'</span>:<span class="string">'D'</span>,</span><br><span class="line">           u<span class="string">'脾胃虚弱证型系数'</span>:<span class="string">'E'</span>,u<span class="string">'肝肾阴虚证型系数'</span>:<span class="string">'F'</span>&#125;</span><br><span class="line">k=4 <span class="comment">#需要进行的聚类类别数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#读取数据并进行聚类分析</span></span><br><span class="line">data=pd.read_excel(datafile)<span class="comment">#读取数据</span></span><br><span class="line">keys=list(typelabel.keys())</span><br><span class="line">result=pd.DataFrame()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:<span class="comment">#判断是否主窗口运行，这句代码的作用比较神奇</span></span><br><span class="line">    <span class="comment">#判断是否主窗口运行，如果是将代码保存为.py后运行，则需要这句，</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(keys)):</span><br><span class="line">        <span class="comment">#调用k-means算法，进行聚类离散化</span></span><br><span class="line">        <span class="built_in">print</span>(u<span class="string">'正在进行"%s"的聚类...'</span> %keys[i])</span><br><span class="line">        kmodel=KMeans(n_clusters=k,n_jobs=2)<span class="comment">#n_jobs是并行数，一般等于CPU数较好</span></span><br><span class="line">        kmodel.fit(data[[keys[i]]].as_matrix())<span class="comment">#训练模型</span></span><br><span class="line"></span><br><span class="line">        r1=pd.DataFrame(kmodel.cluster_centers_,columns=[typelabel[keys[i]]])</span><br><span class="line">        <span class="comment">#聚类中心</span></span><br><span class="line">        r2=pd.Series(kmodel.labels_).value_counts()<span class="comment">#分类统计</span></span><br><span class="line">        r2=pd.DataFrame(r2,columns=[typelabel[keys[i]]+<span class="string">'n'</span>])<span class="comment">#转为DataFrame,记录</span></span><br><span class="line">            <span class="comment">#各个类别的数目</span></span><br><span class="line">        r=pd.concat([r1,r2],axis=1).sort_values(typelabel[keys[i]])<span class="comment">#匹配聚类中心和类别数目,旧api:sort()</span></span><br><span class="line">        r.index=[1,2,3,4]</span><br><span class="line"></span><br><span class="line">        <span class="comment">#rolling_mean()用来计算相邻2列的均值，一次作为边界点</span></span><br><span class="line">        r[typelabel[keys[i]]] = r[typelabel[keys[i]]].rolling(2).mean()<span class="comment">#旧API:pd.rolling_mean(r[typelabel[keys[i]]],2)</span></span><br><span class="line">        r[typelabel[keys[i]]][1]=0.0<span class="comment">#这两句代码将原来的聚类中心改为边界点</span></span><br><span class="line">        result=result.append(r.T)</span><br><span class="line"></span><br><span class="line">    result=result.sort_index()<span class="comment">#以Index排序，即以A,B,C,D,E,F顺序排,旧api:sort()</span></span><br><span class="line">    result.to_excel(processedfile)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>离散完的数据应如下：<br><img src="/中医证型关联规则挖掘/model_data.png" width="800" height="800"></p>
+<h1 id="四、模型构建"><a href="#四、模型构建" class="headerlink" title="四、模型构建"></a>四、模型构建</h1><p>这里使用<a href="https://wltongxue.github.io/Apriori算法/" target="_blank" rel="noopener">Arpiori算法（点击看该算法详解）</a><br><img src="/中医证型关联规则挖掘/apriori_process.png" width="400" height="400"><br>1、    由于Apriori算法时间较长，元数据比较大，鉴于这是实验，我们选用抽样的事务集，如下图：<br><img src="/中医证型关联规则挖掘/transaction_set.png" width="200" height="200"><br>2、    python使用apriori算法探寻关联规则（很遗憾，scikit-learn并未提供关联算法，所以这里的apriori算法是自己实现的库，请参考上面”<a href="https://wltongxue.github.io/Apriori算法/" target="_blank" rel="noopener">Apriori算法</a>”里该算法的实现）:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##Apriori关联规则算法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line">from __future__ import print_function</span><br><span class="line">import pandas as pd</span><br><span class="line">from apriori import * <span class="comment">#导入自行编写的高效的Apriori函数</span></span><br><span class="line">import time <span class="comment">#导入时间库用来计算用时</span></span><br><span class="line"></span><br><span class="line">inputfile=<span class="string">'../data/apriori.txt'</span><span class="comment">#输入事务集文件</span></span><br><span class="line">data=pd.read_csv(inputfile,header=None,dtype=object)</span><br><span class="line"></span><br><span class="line">start=time.clock()<span class="comment">#计时开始</span></span><br><span class="line"><span class="built_in">print</span>(u<span class="string">'\n转换原始数据至0-1矩阵...'</span>)</span><br><span class="line">ct=lambda x:pd.Series(1,index=x[pd.notnull(x)])<span class="comment">#转换0-1矩阵的过渡函数，即将标签数据转换为1</span></span><br><span class="line">b=map(ct,data.as_matrix())<span class="comment">#用map方式执行</span></span><br><span class="line">data=pd.DataFrame(b).fillna(0)<span class="comment">#实现矩阵转换，除了1外，其余为空，空值用0填充</span></span><br><span class="line">end=time.clock()<span class="comment">#计时结束</span></span><br><span class="line"><span class="built_in">print</span>(u<span class="string">'\n转换完毕,用时:%0.2f秒'</span> %(end-start))</span><br><span class="line">del b <span class="comment">#删除中间变量b,节省内存</span></span><br><span class="line"></span><br><span class="line">support = 0.06<span class="comment">#最小支持度</span></span><br><span class="line">confidence=0.75<span class="comment">#最小置信度</span></span><br><span class="line">ms=<span class="string">'---'</span> <span class="comment">#连接符，默认'--'，用来区分不同元素,如A--B.需要保证原始表格中不含有该字符</span></span><br><span class="line"></span><br><span class="line">start=time.clock()<span class="comment">#计时开始</span></span><br><span class="line"><span class="built_in">print</span>(u<span class="string">'\n开始搜索关键规则...'</span>)</span><br><span class="line">find_rule(data,support,confidence,ms)</span><br><span class="line">end=time.clock()<span class="comment">#计时结束</span></span><br><span class="line"><span class="built_in">print</span>(u<span class="string">'\n搜索完成，用时:%0.2f秒'</span> %(end-start))</span><br></pre></td></tr></table></figure></p>
+<p>执行结果：<br><img src="/中医证型关联规则挖掘/lab_results.png" width="300" height="300"><br>3、    模型分析<br>根据上述运行结果，我们得出了5个关联规则，如A3–F–H4，它的意思是A3，F4=&gt;H4，类似的， D2–F3–H4–A2的意思是D2，F3，H4=&gt;A2。但是 ，并非所有关联规则都有意义的，我们只在乎那些 以 H为规则结果的规则（这里H就是我们想要预测的癌症TNM分期结果），也就是如下表的规则：<br><img src="/中医证型关联规则挖掘/model_results.png" width="800" height="800"><br>分析 上表可得到如下结论。</p>
+<ul>
+<li>1) A3、F4=&gt;H4支持度最大，达到了7.85%，置信度最大，达到了87.96%，说明肝气郁结证型系数在A3范围内，肝肾阴虚证型系数处于F4范围内，TNM分期诊断为H4期的可能性为87.96%，而这种情况发生的可能性为7.85%。</li>
+<li>2) C3、F4=&gt;H4支持度7.53%，置信度87.5%，说明冲任失调症型系数在C3范围内，肝肾阴虚证型系数处于F4范围内，TNM分期诊断为H4期的可能性为 87.5%，而这种情况发生的可能性为7.53%。</li>
+<li>3) B2、F4=&gt;H4支持度6.24%，置信度79.45%，说明热毒蕴结证型系数在B2范围内，肝肾阴虚证型系数处于F4范围内，TNM分期诊断为H4期的可能性为79.45%，而这种情况发生的可能性为6.24%。<br>综合以上分析，TNM分期为H4起价的癌症患者证型主要为肝肾阴虚证、热毒蕴结证、肝气郁结证和冲任失调，H4期患者肝肾阴虚和肝气郁结的临床表现较为突出，其置信度最大达到了87.96%。</li>
+</ul>
+
       
     </div>
     
@@ -478,6 +512,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/如何使用hexo/" rel="prev" title="Mac配置hexo全过程">
+                Mac配置hexo全过程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -532,8 +570,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -548,7 +595,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -616,6 +663,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、挖掘目标"><span class="nav-number">1.</span> <span class="nav-text">一、挖掘目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、数据抽取"><span class="nav-number">2.</span> <span class="nav-text">二、数据抽取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、数据预处理"><span class="nav-number">3.</span> <span class="nav-text">三、数据预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、模型构建"><span class="nav-number">4.</span> <span class="nav-text">四、模型构建</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

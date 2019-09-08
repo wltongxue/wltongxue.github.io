@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/pandas.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据挖掘,机器学习,关联规则,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="wltongxue" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本次学习我们将详细介绍Apriori关联规则算法中的相关概念和，Apriori算法过程推导。">
+<meta name="keywords" content="数据挖掘,机器学习,关联规则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apriori算法">
+<meta property="og:url" content="http://yoursite.com/Apriori算法/index.html">
+<meta property="og:site_name" content="wltongxue">
+<meta property="og:description" content="本次学习我们将详细介绍Apriori关联规则算法中的相关概念和，Apriori算法过程推导。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/Apriori算法/example.png">
+<meta property="og:image" content="http://yoursite.com/Apriori算法/example.png">
+<meta property="og:updated_time" content="2019-09-08T05:22:29.418Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apriori算法">
+<meta name="twitter:description" content="本次学习我们将详细介绍Apriori关联规则算法中的相关概念和，Apriori算法过程推导。">
+<meta name="twitter:image" content="http://yoursite.com/Apriori算法/example.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/Apriori算法/">
+
+
+
+
+
+  <title>Apriori算法 | wltongxue</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wltongxue</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Apriori算法/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wltongxue">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wltongxue">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Apriori算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-08T12:35:03+08:00">
+                2019-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习算法/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/Apriori算法/" class="leancloud_visitors" data-flag-title="Apriori算法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本次学习我们将详细介绍Apriori关联规则算法中的相关概念和，Apriori算法过程推导。<br><a id="more"></a><br>ps：本文参考的博客链接有如下，博主先行感谢。<br>(<a href="https://www.cnblogs.com/pinard/p/6293298.html" target="_blank" rel="noopener">https://www.cnblogs.com/pinard/p/6293298.html</a>)<br>(<a href="https://www.cnblogs.com/chaoren399/p/4870288.html" target="_blank" rel="noopener">https://www.cnblogs.com/chaoren399/p/4870288.html</a>)</p>
+<h1 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h1><ul>
+<li>a) 支持度：关联规则A=&gt;B的支持度指的是事件AB同时发生的概率<br>$$Support(A=&gt;B) = P(A {\cup} B)$$</li>
+<li><p>b) 置信度：关联规则A=&gt;B的置信度指的是在A发生的基础上发生B的概率<br>$$Confidenc(A=&gt;B) = P(B|A)$$</p>
+<blockquote>
+<p>举个例子，在购物数据中，纸巾对应鸡爪的置信度为40%，支持度为1%。则意味着在购物数据中，总共有1%的用户既买鸡爪又买纸巾;同时买鸡爪的用户中有40%的用户购买纸巾。</p>
+</blockquote>
+</li>
+<li><p>c) K项集<br>如何<strong>事件A</strong>包含<strong>k个元素</strong>，那么称<strong>这个事件为k项集</strong>，并且事件A满足最小支持度阈值的事件称为<strong>频繁k项集</strong>。（说明这个事件在所有情况里发生的比较多）</p>
+</li>
+<li><p>d) 由频繁项集产生强关联规则<br>1）    $k$维数据项集$L_k$是频繁项集的必要条件是它的所有$k-1$维子项集也为频繁项集，记为$L_(k-1)$。<br>2）    如果$k$维数据项集的任一一个$L_(k-1)$不是频繁项集，则$L_k$本身也不是最大数据项集。<br>3）    $L_k$是$k$维频繁项集，若所有$k-1$维频繁项集$L_(k-1)$中包含$L_k$的$k-1$维子项集的个数小于$k$，则$L_k$不可能是$k$维最大频繁数据项集。<br>4）    同时满足最小支持度阈值和最小置信度阈值的规则称为强规则。</p>
+</li>
+</ul>
+<h1 id="二、Aprior算法过程"><a href="#二、Aprior算法过程" class="headerlink" title="二、Aprior算法过程"></a>二、Aprior算法过程</h1><h5 id="目标一：找最大k项频繁项集：根据支持度"><a href="#目标一：找最大k项频繁项集：根据支持度" class="headerlink" title="目标一：找最大k项频繁项集：根据支持度"></a>目标一：找最大k项频繁项集：<strong>根据支持度</strong></h5><pre><code>输入：数据集D，支持度阈值α
+输出：最大k项频繁集
+</code></pre><ul>
+<li>1)    扫描整个数据集D，得到所有出现过的数据，作为候选频繁项集。k=1，频繁0-项集为空集。</li>
+<li>2)    挖掘频繁k-项集<br>a)    扫描数据计算候选频繁k项集的支持度<br>b)    去除候选中支持度低于阈值的数据集，得到频繁k项集。若为空，则返回k-1项集为结果，<strong>算法结束</strong>；若只有一项，则返回频繁k-项集为结果，<strong>算法结束</strong>。<br>c)    基于频繁k项集，连接生成候选频繁k+1项集。</li>
+<li>3）令k=k+，转2）。<blockquote>
+<p>下面举个例子看看；<br><img src="/Apriori算法/example.png" width="500" height="500"><br>我们的数据集D有4条记录，分别是134,235,1235和25。现在我们用Apriori算法来寻找频繁k项集，<strong>最小支持度(支持度阈值)设置为50%</strong>。首先我们生成候选频繁1项集，包括我们所有的5个数据并计算5个数据的支持度，计算完毕后我们进行剪枝，数据4由于支持度只有25%被剪掉。我们最终的频繁1项集为1235，现在我们链接生成候选频繁2项集，包括12,13,15,23,25,35共6组。此时我们的第一轮迭代结束。<br>进入第二轮迭代，我们扫描数据集计算候选频繁2项集的支持度，接着进行剪枝，由于12和15的支持度只有25%而被筛除，得到真正的频繁2项集，包括13,23,25,35。现在我们链接生成候选频繁3项集,123, 125，135和235共4组，这部分图中没有画出。通过计算候选频繁3项集的支持度，我们发现123,125和135的支持度均为25%，因此接着被剪枝，最终得到的真正频繁3项集为235一组。由于此时我们无法再进行数据连接，进而得到候选频繁4项集，最终的结果即为频繁3三项集235。</p>
+</blockquote>
+</li>
+</ul>
+<h5 id="目标二：由频繁项集（不仅仅是最大频繁项集）产生关联规则：根据置信度"><a href="#目标二：由频繁项集（不仅仅是最大频繁项集）产生关联规则：根据置信度" class="headerlink" title="目标二：由频繁项集（不仅仅是最大频繁项集）产生关联规则：根据置信度"></a>目标二：由频繁项集（不仅仅是最大频繁项集）产生关联规则：根据置信度</h5><pre><code>输入：频繁项集
+输出：关联规则
+</code></pre><p>1)    扫描每个频繁项集（从最大频繁项集向下扫描），排列组合构建规则<br>2)    计算规则的置信度是否大于置信度阈值，若大于则记录下来，若小于则抛弃。</p>
+<blockquote>
+<p>（抛弃的优化：如下图所示）<br><img src="/Apriori算法/example.png" width="500" height="500"><br>图中给出了从项集{0,1,2,3}产生的所有关联规则，其中阴影区域给出的是最低可信度的规则。可以发现如果{0,1,2}-&gt;{3}是一条低可信度规则，那么<strong>所有其他以3为后件（箭头右部包含3）</strong>的规则均为低可信度的。<br>作用：利用上述性质来减少需要测试的规则数目</p>
+</blockquote>
+<h1 id="三、Aprior的算法实现"><a href="#三、Aprior的算法实现" class="headerlink" title="三、Aprior的算法实现"></a>三、Aprior的算法实现</h1><p>由于python的库暂无Aprior算法的实现模块，所以这里补充用python实现Aprior的代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line">from __future__ import print_function</span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line"><span class="comment">#自定义连接函数,用于实现L_&#123;k-1&#125;到C_k的连接</span></span><br><span class="line">def connect_string(x,ms):</span><br><span class="line">    x=list(map(lambda i:sorted(i.split(ms)),x))</span><br><span class="line">    l=len(x[0])</span><br><span class="line">    r= []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(x)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(i,len(x)):</span><br><span class="line">            <span class="keyword">if</span> x[i][:l-1] == x[j][:l-1] and x[i][l-1]!=x[j][l-1]:</span><br><span class="line">                r.append(x[i][:l-1]+sorted([x[j][l-1],x[i][l-1]]))</span><br><span class="line">    <span class="built_in">return</span> r</span><br><span class="line"></span><br><span class="line"><span class="comment">#寻找关联规则的函数</span></span><br><span class="line">def find_rule(d,support,confidence,ms=u<span class="string">'--'</span>):</span><br><span class="line">    result=pd.DataFrame(index=[<span class="string">'support'</span>,<span class="string">'confidence'</span>])<span class="comment">#定义输出结果</span></span><br><span class="line"></span><br><span class="line">    support_series=1.0*d.sum()/len(d)<span class="comment">#支持度序列</span></span><br><span class="line">    column= list(support_series[support_series&gt;support].index) <span class="comment">#初步根据支持度筛选</span></span><br><span class="line">    k=0</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> len(column) &gt;1:</span><br><span class="line">        k=k+1</span><br><span class="line">        <span class="built_in">print</span>(u<span class="string">'\n正在进行第%s次搜索...'</span> %k)</span><br><span class="line">        column = connect_string(column,ms)</span><br><span class="line">        <span class="built_in">print</span>(u<span class="string">'数目：%s...'</span> %len(column))</span><br><span class="line">        sf=lambda i:d[i].prod(axis=1,numeric_only=True) <span class="comment">#新一批支持度的计算函数</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#创建连接数据，这一步耗时、耗内存最严重，当数据集较大时，可以考虑并行运算优化</span></span><br><span class="line">        d_2 = pd.DataFrame(list(map(sf,column)),index=[ms.join(i) <span class="keyword">for</span> i <span class="keyword">in</span> column]).T</span><br><span class="line"></span><br><span class="line">        support_series_2=1.0*d_2[[ms.join(i) <span class="keyword">for</span> i <span class="keyword">in</span> column]].sum()/len(d)<span class="comment">#计算连接后的支持度</span></span><br><span class="line">        column=list(support_series_2[support_series_2 &gt; support].index) <span class="comment">#新一轮支持度筛选</span></span><br><span class="line">        support_series = support_series.append(support_series_2)</span><br><span class="line">        column2=[]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> column:<span class="comment">#遍历可能的推理，如&#123;A,B,C&#125;究竟时A+B--&gt;C还是B+C--&gt;A还是C+A--&gt;B?</span></span><br><span class="line">            i = i.split(ms)</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(len(i)):</span><br><span class="line">                column2.append(i[:j]+i[j+1:]+i[j:j+1])</span><br><span class="line"></span><br><span class="line">        confidence_series=pd.Series(index=[ms.join(i) <span class="keyword">for</span> i <span class="keyword">in</span> column2])<span class="comment">#定义置信度序列</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> column2:<span class="comment">#计算置信度序列</span></span><br><span class="line">            confidence_series[ms.join(i)] = support_series[ms.join(sorted(i))]/support_series[ms.join(i[:len(i)-1])]</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> confidence_series[confidence_series &gt; confidence].index:</span><br><span class="line">            <span class="comment">#置信度筛选</span></span><br><span class="line">            result[i]=0.0</span><br><span class="line">            result[i][<span class="string">'confidence'</span>] = confidence_series[i]</span><br><span class="line">            result[i][<span class="string">'support'</span>]=support_series[ms.join(sorted(i.split(ms)))]</span><br><span class="line"></span><br><span class="line">    result = result.T.sort_values([<span class="string">'confidence'</span>,<span class="string">'support'</span>],ascending=False)<span class="comment">#整理结果，输出</span></span><br><span class="line">    <span class="built_in">print</span>(u<span class="string">'\n结果为:'</span>)</span><br><span class="line">    <span class="built_in">print</span>(result)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">return</span> result</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>鼓励我一下吧，我会有更多原创的！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="wltongxue 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="wltongxue 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt="wltongxue 比特币">
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/关联规则/" rel="tag"># 关联规则</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/如何使用hexo/" rel="next" title="Mac配置hexo全过程">
+                <i class="fa fa-chevron-left"></i> Mac配置hexo全过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTE1Mi8xNzcwMA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">wltongxue</p>
+              <p class="site-description motion-element" itemprop="description">wltongxue的个人网站，希望给大家提供解决问题的方法和思考问题的模式。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/wltongxue" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="wltongxue@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、基本概念"><span class="nav-number">1.</span> <span class="nav-text">一、基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、Aprior算法过程"><span class="nav-number">2.</span> <span class="nav-text">二、Aprior算法过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#目标一：找最大k项频繁项集：根据支持度"><span class="nav-number">2.0.0.0.1.</span> <span class="nav-text">目标一：找最大k项频繁项集：根据支持度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#目标二：由频繁项集（不仅仅是最大频繁项集）产生关联规则：根据置信度"><span class="nav-number">2.0.0.0.2.</span> <span class="nav-text">目标二：由频繁项集（不仅仅是最大频繁项集）产生关联规则：根据置信度</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Aprior的算法实现"><span class="nav-number">3.</span> <span class="nav-text">三、Aprior的算法实现</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wltongxue</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("SN2WextlXExc5bhvW6gzeDn3-gzGzoHsz", "hL1seDeudosTFHN1X1NfzBhr");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
