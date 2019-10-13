@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/pandas.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据挖掘,python,分类,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="wltongxue" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本章学习主要是针对，给定样本及其已知类别，通过机器学习获取到各类特征。如何训练分类模型，并通过分类模型预测未知样本的类别。">
+<meta name="keywords" content="数据挖掘,python,分类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据挖掘实战4-基于水色图像的水质评价">
+<meta property="og:url" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/index.html">
+<meta property="og:site_name" content="wltongxue">
+<meta property="og:description" content="本章学习主要是针对，给定样本及其已知类别，通过机器学习获取到各类特征。如何训练分类模型，并通过分类模型预测未知样本的类别。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/image.png">
+<meta property="og:image" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/image_cut.png">
+<meta property="og:image" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/moment.png">
+<meta property="og:image" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/model_process.png">
+<meta property="og:image" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/train_matrix.png">
+<meta property="og:image" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/test_matrix.png">
+<meta property="og:updated_time" content="2019-10-13T07:20:45.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据挖掘实战4-基于水色图像的水质评价">
+<meta name="twitter:description" content="本章学习主要是针对，给定样本及其已知类别，通过机器学习获取到各类特征。如何训练分类模型，并通过分类模型预测未知样本的类别。">
+<meta name="twitter:image" content="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/image.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/">
+
+
+
+
+
+  <title>数据挖掘实战4-基于水色图像的水质评价 | wltongxue</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wltongxue</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/数据挖掘实战4-基于水色图像的水质评价/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wltongxue">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wltongxue">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据挖掘实战4-基于水色图像的水质评价</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-22T20:35:46+08:00">
+                2019-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据挖掘实战讲解系列/" itemprop="url" rel="index">
+                    <span itemprop="name">数据挖掘实战讲解系列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/数据挖掘实战4-基于水色图像的水质评价/" class="leancloud_visitors" data-flag-title="数据挖掘实战4-基于水色图像的水质评价">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本章学习主要是针对，给定样本及其已知类别，通过机器学习获取到各类特征。如何训练分类模型，并通过分类模型预测未知样本的类别。<br><a id="more"></a></p>
+<blockquote>
+<p>问题背景：假设你是渔业生产的从业者，可以通过观察水的颜色调控水质。比如浅绿色的水质为1级，灰蓝色的水质为2级等。如果我们使用计算机视觉监控，需要计算机通过图像处理来判定水的颜色，以及其对应的水质级别。本案例选择采用颜色矩来提取水样颜色的各个特征，作为训练特征。</p>
+</blockquote>
+<h1 id="一、挖掘目标"><a href="#一、挖掘目标" class="headerlink" title="一、挖掘目标"></a>一、挖掘目标</h1><p>1、通过水样图像，自动判别出该水样的水质类别。<br><strong>此为多分类问题，分类结果为多级水质。</strong></p>
+<h1 id="二、数据抽取"><a href="#二、数据抽取" class="headerlink" title="二、数据抽取"></a>二、数据抽取</h1><p>1)    拍摄水样图像，从中提取反映图像本质的关键指标。<br>2)    图像特征主要包括颜色特征、纹理特征、形状特征、空间关系特征等。这里我们选取颜色特征。<br>如下图为采集的水样图像原始数据（此时并未提取特征）<br><img src="/数据挖掘实战4-基于水色图像的水质评价/image.png" width="800" height="800"></p>
+<h1 id="三、数据预处理"><a href="#三、数据预处理" class="headerlink" title="三、数据预处理"></a>三、数据预处理</h1><p>1、    图像切割<br>采集到的水样图像包含了盛水容器等，为了提取到水色的特征，需要提取图像中央部分具有代表意义的图像，具体实施是提取水样图像中央101*101像素图像。如图切割：<br><img src="/数据挖掘实战4-基于水色图像的水质评价/image_cut.png" width="400" height="400"><br>2、    特征提取<br>本案例我们采用颜色矩来提取水样图像特征。<br>颜色矩是一种简单有效的颜色特征表示方法：<br>1)    一阶颜色矩（一阶原点矩）——均值，反映图像的敏感程度<br>$$E_i = {\frac{1}{N}}\sum_{j=1}^N p_{ij}$$<br>其中，$E_i$是第$i$个颜色通道的一阶颜色矩，颜色通道对于RGB颜色空间，则为R通道、G通道、B通道;$p_{ij}$是第$j$个像素的第$i$个颜色通道的颜色值;$N$为像素个数.<br>2)    二阶颜色矩（二阶中心距）——标准差，反映图像颜色分布范围<br>$$\sigma_i = \sqrt{\frac{1}{N}\sum_{j=1}^N (p_{ij}-E_i)^2}$$<br>其中，$\sigma_i$实在第$i$个颜色通道的二阶颜色矩，$E_i$是第$i$个颜色通道的一阶颜色矩。<br>3)    三阶颜色矩（三阶中心距）——斜度，反映图像颜色对称性<br>$$s_i = \sqrt[3]{\frac{1}{N}\sum_{j=1}^N (p_{ij}-E_i)^3}$$<br>其中，$s_i$是在第$i$个颜色通道的三阶颜色矩，$E_i$是在第$i$个颜色通道的一阶颜色矩。<br><img src="/数据挖掘实战4-基于水色图像的水质评价/moment.png" width="800" height="800"></p>
+<h1 id="四、模型构建"><a href="#四、模型构建" class="headerlink" title="四、模型构建"></a>四、模型构建</h1><p>实际这是一个多分类问题，分类模型也比较多，这里选择<a href="https://wltongxue.github.io/SVM/" target="_blank" rel="noopener">SVM算法模型</a>模型详细介绍可点击链接,模型构建过程如下。这里稍微简单的说一下机器学习的过程，首先切分数据集为训练集和测试集（也可以是独立的两个数据集），然后我们选择合适的算法，每种算法模型都可以有多种参数，但是确定什么样的参数才能解决我们当前的问题，这就需要训练集一个一个的带入到算法模型里然后一步一步的调整到合适的参数获得模型。最后我们需要把测试集代入到训练好的模型里，评估一下这个模型是不是在任何该问题的数据下都能够准确的得到预测结果。评估分类模型的指标也有很多（参考<a href="https://wltongxue.github.io/%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/" target="_blank" rel="noopener">什么是数据挖掘</a>）,本章我们选择混淆矩阵。<br><img src="/数据挖掘实战4-基于水色图像的水质评价/model_process.png" width="500" height="500"></p>
+<h3 id="按照上图的步骤我们进行代码的编写："><a href="#按照上图的步骤我们进行代码的编写：" class="headerlink" title="按照上图的步骤我们进行代码的编写："></a>按照上图的步骤我们进行代码的编写：</h3><p>1、    python实现数据划分：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*— coding:utf-8 -*-</span></span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line">inputfile=<span class="string">'../data/moment.csv'</span> <span class="comment">#数据文件</span></span><br><span class="line">outputfile1=<span class="string">'../tmp/cm_train.xls'</span></span><br><span class="line">outputfile2=<span class="string">'../tmp/cm_test.xls'</span></span><br><span class="line">data=pd.read_csv(inputfile,encoding=<span class="string">'gbk'</span>)<span class="comment">#读取数据，指定编码为gbk</span></span><br><span class="line">data=data.as_matrix()</span><br><span class="line"></span><br><span class="line">from numpy.random import shuffle<span class="comment">#引入随机函数</span></span><br><span class="line">shuffle(data)<span class="comment">#随机打乱数据</span></span><br><span class="line">data_train=data[:int(0.8*len(data)), :]<span class="comment">#选取前80%为训练数据</span></span><br><span class="line">data_test=data[int(0.8*len(data)):, :]<span class="comment">#选取后20%为测试数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#构造特征和标签</span></span><br><span class="line">x_train=data_train[:, 2:]*30<span class="comment">#放大特征</span></span><br><span class="line">y_train=data_train[:, 0].astype(int)</span><br><span class="line">x_test=data_test[:, 2:]*30<span class="comment">#放大特征</span></span><br><span class="line">y_test=data_test[:, 0].astype(int)</span><br></pre></td></tr></table></figure></p>
+<p>2、    python使用SVM算法：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#导入模型相关的函数，建立并且训练模型</span></span><br><span class="line">from sklearn import svm</span><br><span class="line">model=svm.SVC()</span><br><span class="line">model.fit(x_train, y_train)</span><br><span class="line">import pickle</span><br><span class="line">pickle.dump(model, open(<span class="string">'../tmp/svm.model'</span>,<span class="string">'wb'</span>))</span><br><span class="line"><span class="comment">#最后一句保存模型，以后可以通过下面语句重新加载模型：</span></span><br><span class="line"><span class="comment">#model=pickle.load(open('../tmp/svm.model','rb'))</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#导入输出相关的库，生成混淆矩阵</span></span><br><span class="line">from sklearn import metrics</span><br><span class="line">cm_train=metrics.confusion_matrix(y_train, model.predict(x_train))<span class="comment">#训练样本的混淆矩阵</span></span><br><span class="line">cm_test=metrics.confusion_matrix(y_test, model.predict(x_test))<span class="comment">#测试样本的混淆矩阵</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#保存结果</span></span><br><span class="line">pd.DataFrame(cm_train, index = range(1, 6), columns = range(1, 6)).to_excel(outputfile1)</span><br><span class="line">pd.DataFrame(cm_test, index = range(1, 6), columns = range(1, 6)).to_excel(outputfile2)</span><br></pre></td></tr></table></figure></p>
+<p>这里使用模型的混淆矩阵所为评判标准：<br>1、模型混淆矩阵（训练集建模后的回判）。分类准确率为96.91%，分类效果较好。<br><img src="/数据挖掘实战4-基于水色图像的水质评价/train_matrix.png" width="400" height="400"><br>3、    水质评价的混淆矩阵（测试集代入建好的模型）。分类准确率为95.12%，说明水质评价模型对于新增的谁知图像的分类效果较好。<br><img src="/数据挖掘实战4-基于水色图像的水质评价/test_matrix.png" width="400" height="400"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>鼓励我一下吧，我会有更多原创的！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="wltongxue 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="wltongxue 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt="wltongxue 比特币">
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/分类/" rel="tag"># 分类</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Apriori算法/" rel="next" title="Apriori算法">
+                <i class="fa fa-chevron-left"></i> Apriori算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/SVM/" rel="prev" title="SVM">
+                SVM <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTE1Mi8xNzcwMA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">wltongxue</p>
+              <p class="site-description motion-element" itemprop="description">wltongxue的个人网站，希望给大家提供解决问题的方法和思考问题的模式。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/wltongxue" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="wltongxue@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://oxsec.com/?p=1" title="大水牛‘s blog" target="_blank">大水牛‘s blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://chenzy96.github.io" title="国民大可爱‘s blog" target="_blank">国民大可爱‘s blog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、挖掘目标"><span class="nav-number">1.</span> <span class="nav-text">一、挖掘目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、数据抽取"><span class="nav-number">2.</span> <span class="nav-text">二、数据抽取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、数据预处理"><span class="nav-number">3.</span> <span class="nav-text">三、数据预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、模型构建"><span class="nav-number">4.</span> <span class="nav-text">四、模型构建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#按照上图的步骤我们进行代码的编写："><span class="nav-number">4.0.1.</span> <span class="nav-text">按照上图的步骤我们进行代码的编写：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wltongxue</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("SN2WextlXExc5bhvW6gzeDn3-gzGzoHsz", "hL1seDeudosTFHN1X1NfzBhr");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
