@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/pandas.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/pandas.ico?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="数据挖掘,python,分类预测问题,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="wltongxue" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="本次学习我们将沿用前面的数据挖掘过程，仍然处理一个分类问题，并着重学习一些新的数据处理手段。">
+<meta name="keywords" content="数据挖掘,python,分类预测问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据挖掘实战5-家用电器用户行为分析与事件识别">
+<meta property="og:url" content="http://yoursite.com/家用电器用户行为分析与事件识别/index.html">
+<meta property="og:site_name" content="wltongxue">
+<meta property="og:description" content="本次学习我们将沿用前面的数据挖掘过程，仍然处理一个分类问题，并着重学习一些新的数据处理手段。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/metadata.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/water_freq.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/data_tran.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/signal.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/divid_result.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/event_limit.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/signal2.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/character1.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/character2.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/shower1.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/shower2.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/missing_data.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/missing_data.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/model_data.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/model.png">
+<meta property="og:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/model_result.png">
+<meta property="og:updated_time" content="2019-10-13T12:02:26.863Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据挖掘实战5-家用电器用户行为分析与事件识别">
+<meta name="twitter:description" content="本次学习我们将沿用前面的数据挖掘过程，仍然处理一个分类问题，并着重学习一些新的数据处理手段。">
+<meta name="twitter:image" content="http://yoursite.com/家用电器用户行为分析与事件识别/metadata.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/家用电器用户行为分析与事件识别/">
+
+
+
+
+
+  <title>数据挖掘实战5-家用电器用户行为分析与事件识别 | wltongxue</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wltongxue</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/家用电器用户行为分析与事件识别/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wltongxue">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wltongxue">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据挖掘实战5-家用电器用户行为分析与事件识别</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T15:32:24+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据挖掘实战讲解系列/" itemprop="url" rel="index">
+                    <span itemprop="name">数据挖掘实战讲解系列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/家用电器用户行为分析与事件识别/" class="leancloud_visitors" data-flag-title="数据挖掘实战5-家用电器用户行为分析与事件识别">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本次学习我们将沿用前面的数据挖掘过程，仍然处理一个分类问题，并着重学习一些新的数据处理手段。<br><a id="more"></a></p>
+<blockquote>
+<p>问题背景：如果你是一个家电公司的，你要卖热水器，但是不同的地区气候、不同区域、用户的差别都会导致使用不同，你为了能因地制宜，因人而异的挣更多钱，你需要了解用户的热水器使用习惯。由于你们公司热水器能记录用户热水器的温度，开机，加热等状态数据，所以你获得了原始的一些热水器数据。</p>
+</blockquote>
+<h1 id="一、挖掘目标"><a href="#一、挖掘目标" class="headerlink" title="一、挖掘目标"></a>一、挖掘目标</h1><p>1)    根据热水器采集到的数据，划分一次完整用水事件<br>2)    在划分好的一次完整用水事件中，识别出洗浴事件<br>这属于识别分类 0-1二分类问题与实践一中偷电用户的识别相类似，不过数据更难以处理。</p>
+<h1 id="二、数据抽取"><a href="#二、数据抽取" class="headerlink" title="二、数据抽取"></a>二、数据抽取</h1><p>1)    智能热水器在状态发生改变或者水流量非零时，每两秒会采集一条状态数据。<br>2)    本案例抽取200家热水器用户从2014年1月1日至2014年12月31日的用水记录。<br><img src="/家用电器用户行为分析与事件识别/metadata.png" width="800" height="800"></p>
+<h1 id="三、数据探索"><a href="#三、数据探索" class="headerlink" title="三、数据探索"></a>三、数据探索</h1><p><strong>用水停顿时间间隔</strong>为一条流量不为0的流水记录同下一条水流量不为0的流水记录之间的时间间隔。<br><img src="/家用电器用户行为分析与事件识别/water_freq.png" width="600" height="600"><br>如上表可知，停顿时间间隔为0~0.3分钟的频率很高，根据日常用水经验可以判断为一次用水事件中的停顿；停顿时间为6~13分钟的频率较低，分析其为两次用水事件之间的停顿间隔。两次用水事件的停顿时间间隔分布在3~7分钟。</p>
+<h1 id="四、数据预处理"><a href="#四、数据预处理" class="headerlink" title="四、数据预处理"></a>四、数据预处理</h1><h2 id="数据规约"><a href="#数据规约" class="headerlink" title="数据规约"></a>数据规约</h2><p>1)    属性规约：去除“机器编号”、“有无水流”（水流量可以表示）、“节能模式”（都为关）<br>2)    数值规约：“开关机状态”为“关”且水流量为0时，说明热水器不处于工作状态，数据记录可以删除。</p>
+<h2 id="数据变换"><a href="#数据变换" class="headerlink" title="数据变换"></a>数据变换</h2><p>本案例首先需要从原始记录中划分哪些连续的记录是一次完整的用水事件，一次完整的用水事件是根据水流量和停顿时间间隔的阈值去划分的，所以还建立<strong>阈值寻优模型</strong>。<br><img src="/家用电器用户行为分析与事件识别/data_tran.png" width="200" height="200"></p>
+<h3 id="1-一次完整用水事件的划分模型"><a href="#1-一次完整用水事件的划分模型" class="headerlink" title="1)    一次完整用水事件的划分模型"></a>1)    一次完整用水事件的划分模型</h3><p>在用水记录中，水流量不为0表示正在使用热水；水流量为0是用户用水发生停顿或者用水结束。如果水流量为0的记录之间的时间间隔超过一个阈值T，则划分为一个用水事件。<br><img src="/家用电器用户行为分析与事件识别/signal.png" width="600" height="600"><br>一次完整用水事件的划分步骤如下：</p>
+<ul>
+<li>1）读取数据记录，识别到第一条水流量不为0的数据记录记为$R_1$，按顺序识别接下来的一条水流量不为0的数据记录$R_2$</li>
+<li>2）若$gap_i&gt;T$，则$R_{i+1}$与$R_i$及之间的数据记录不能划分到同一次用水事件。同时将$R_{i+1}记录作为新的读取数据记录的开始，返回步骤1）；若$gap_i&lt;T$，则将$R_{i+1}$与$R_i$及之间的数据记录划分到同一次用水事件，并记录截接下来的水流了不为0数据记录为$R_{i+2}$</li>
+<li>3）循环执行步骤2），直到数据记录读取完毕，结束事件划分。<br>Python代码实现用水事件的划分：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment">#用水事件划分</span></span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line">threshold=pd.Timedelta(minutes=4) <span class="comment">#阈值为4分钟</span></span><br><span class="line">inputfile=<span class="string">'../data/water_heater.xls'</span> <span class="comment">#输入数据路径，需要使用excel格式</span></span><br><span class="line">outputfile=<span class="string">'../tmp/dividsequence.xls'</span> <span class="comment">#输出数据路径，需要使用excel格式</span></span><br><span class="line"></span><br><span class="line">data=pd.read_excel(inputfile)</span><br><span class="line">data[u<span class="string">'发生时间'</span>]=pd.to_datetime(data[u<span class="string">'发生时间'</span>],format=<span class="string">'%Y%m%d%H%M%S'</span>)</span><br><span class="line">data=data[data[u<span class="string">'水流量'</span>]&gt;0] <span class="comment">#只要水流量大于0的记录</span></span><br><span class="line">d=data[u<span class="string">'发生时间'</span>].diff()&gt;threshold <span class="comment">#相邻时间做差分，比较是否大于阈值</span></span><br><span class="line">data[u<span class="string">'事件编号'</span>]=d.cumsum()+1</span><br><span class="line"></span><br><span class="line">data.to_excel(outputfile)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>划分结果如下：<br><img src="/家用电器用户行为分析与事件识别/divid_result.png" width="800" height="800"></p>
+<h3 id="2-用水事件阈值寻优模型"><a href="#2-用水事件阈值寻优模型" class="headerlink" title="2)    用水事件阈值寻优模型"></a>2)    用水事件阈值寻优模型</h3><p>不同地区、不同人、不同季节用水习惯不相同，停顿时长不相同导致阈值差异，建立阈值寻优模型来更新寻找<strong>最优的阈值</strong>，将事件划分更加合理。<br><img src="/家用电器用户行为分析与事件识别/event_limit.png" width="600" height="600"><br>阈值事件个数在某个阈值区间内趋于稳定，可以取该段开始阈值（及其后4个点）进行斜率寻优。<br><img src="/家用电器用户行为分析与事件识别/signal2.png" width="600" height="600"><br>K可以作为A点的斜率指标。<br>于是，阈值优化过程如下：</p>
+<blockquote>
+<p>当K&lt;1，则取阈值最小的点A，把它的阈值作为划分事件的标准（其中1是专家阈值）<br>当不存在K&lt;1是，则找所有阈值中斜率指标K最小的阈值；如果该最小K小于5，则取该阈值作为标准；若该最小K不小于5，则取专家默认阈值4分钟。</p>
+</blockquote>
+<p>Python实现在1-9分钟内阈值寻优：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment">#阈值寻优</span></span><br><span class="line">import numpy as np</span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line">inputfile=<span class="string">'../data/water_heater.xls'</span><span class="comment">#输入数据路径</span></span><br><span class="line">n=4<span class="comment">#使用以后4个点的平均斜率</span></span><br><span class="line"></span><br><span class="line">threshold=pd.Timedelta(minutes=5) <span class="comment">#专家阈值</span></span><br><span class="line">data=pd.read_excel(inputfile)</span><br><span class="line">data[u<span class="string">'发生时间'</span>]=pd.to_datetime(data[u<span class="string">'发生时间'</span>],format=<span class="string">'%Y%m%d%H%M%S'</span>)</span><br><span class="line">data=data[data[u<span class="string">'水流量'</span>]&gt;0] <span class="comment">#只要水流量大于0的记录</span></span><br><span class="line"></span><br><span class="line">def event_num(ts):</span><br><span class="line">    d=data[u<span class="string">'发生时间'</span>].diff()&gt;ts <span class="comment">#相邻事件做查分，比较是否大于阈值</span></span><br><span class="line">    <span class="built_in">return</span> d.sum()+1 <span class="comment">#这样直接返回时间数</span></span><br><span class="line"></span><br><span class="line">dt=[pd.Timedelta(minutes=i) <span class="keyword">for</span> i <span class="keyword">in</span> np.arange(1,9,0.25)]</span><br><span class="line">h=pd.DataFrame(dt,columns=[u<span class="string">'阈值'</span>]) <span class="comment">#定义阈值列</span></span><br><span class="line">h[u<span class="string">'事件数'</span>]=h[u<span class="string">'阈值'</span>].apply(event_num) <span class="comment">#计算每个阈值对应的事件个数，阈值作为参数传禁区</span></span><br><span class="line">h[u<span class="string">'斜率'</span>]=h[u<span class="string">'事件数'</span>].diff()/0.25 <span class="comment">#计算每两个相邻点对应的斜率，每两个相邻点相差0.25</span></span><br><span class="line">h[u<span class="string">'斜率指标'</span>] =h[u<span class="string">'斜率'</span>].abs().rolling(n).mean() <span class="comment">#采用后n个斜率的绝对值平均作为斜率指标</span></span><br><span class="line"></span><br><span class="line">ts=h[u<span class="string">'阈值'</span>][h[u<span class="string">'斜率指标'</span>].idxmin()-n]</span><br><span class="line"><span class="comment">#注：用idmin返回最小值的index，由于rolling_mean()自动计算的是前n个斜率的绝对值平均</span></span><br><span class="line"><span class="comment">#所以结果要进行平移（-n）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ts&gt;threshold:</span><br><span class="line">    ts=pd.Timedelta(minutes=4)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(ts)</span><br></pre></td></tr></table></figure></p>
+<p>寻优结果如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 days 00:04:00</span><br></pre></td></tr></table></figure></p>
+<p>最优阈值4分钟</p>
+<h3 id="3）属性构造"><a href="#3）属性构造" class="headerlink" title="3）属性构造"></a>3）属性构造</h3><p>本案例研究的是用水行为，可以构造4类指标来进行模型的训练：时长指标、频率指标、用水的量化指标以及用水的波动指标，计算如下：<br><img src="/家用电器用户行为分析与事件识别/character1.png" width="600" height="600"><br><img src="/家用电器用户行为分析与事件识别/character2.png" width="600" height="600"></p>
+<h3 id="4-筛选得“候选洗浴事件”"><a href="#4-筛选得“候选洗浴事件”" class="headerlink" title="4)    筛选得“候选洗浴事件”"></a>4)    筛选得“候选洗浴事件”</h3><p>首先，用3个比较宽松的条件筛选掉哪些非常短暂的用水事件：</p>
+<ul>
+<li>一次用水事件中总用水量（纯热水）小于y升</li>
+<li>用水时长小于100秒</li>
+<li>总用水时长小于120秒<br>其次，对y的合理取值进行探究。<br><img src="/家用电器用户行为分析与事件识别/shower1.png" width="600" height="600"><br><img src="/家用电器用户行为分析与事件识别/shower2.png" width="600" height="600"></li>
+</ul>
+<h2 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h2><p>一次完整的用水事件，需要一个开始用水的状态记录和结束用水的状态记录。但是，在划分一次完整用水事件时，发现数据中存在没有结束用水的状态情况。<br><img src="/家用电器用户行为分析与事件识别/missing_data.png" width="600" height="600"><br>如图，第5条状态和第7条状态记录的事件间隔应为2秒，而表中间隔太大。<br>该类缺失值的处理如下：<br>在存在用水状态记录缺失的情况下，填充一条状态记录使水流量为0，发生时间加2秒，其余属性状态不变。<br><img src="/家用电器用户行为分析与事件识别/missing_data.png" width="600" height="600"></p>
+<h1 id="五、模型构建"><a href="#五、模型构建" class="headerlink" title="五、模型构建"></a>五、模型构建</h1><p>本次使用多层神经网络，详情介绍请点击<a href="https://wltongxue.github.io/LM-BP/" target="_blank" rel="noopener">神经网络算法</a>,建模样本数据如下：<br><img src="/家用电器用户行为分析与事件识别/model_data.png" width="800" height="800"><br>模型选择：11个属性作为输入，含有两个隐含层的神经网络，隐节点数分别为17，10时训练最优，输出为1表示为洗浴事件，输出为0表示不是洗浴事件。<br><img src="/家用电器用户行为分析与事件识别/model.png" width="300" height="300"><br>Python实现多层神经网络代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment">#建立、训练多层神经网络，并完成模型的检验</span></span><br><span class="line">from __future__ import print_function</span><br><span class="line">import pandas as pd</span><br><span class="line"></span><br><span class="line">inputfile1=<span class="string">'../data/train_neural_network_data.xls'</span> <span class="comment">#训练数据</span></span><br><span class="line">inputfile2=<span class="string">'../data/test_neural_network_data.xls'</span> <span class="comment">#测试数据</span></span><br><span class="line">testoutputfile=<span class="string">'../tmp/test_output_data.xls'</span> <span class="comment">#测试数据模型输出文件</span></span><br><span class="line">data_train=pd.read_excel(inputfile1) <span class="comment">#读入训练数据（由日志标记时间是否为洗浴）</span></span><br><span class="line">data_test=pd.read_excel(inputfile2) <span class="comment">#读入测试数据（有日志标记时间是否为洗浴）</span></span><br><span class="line">y_train=data_train.iloc[:,4].as_matrix() <span class="comment">#训练样本标签列</span></span><br><span class="line">x_train=data_train.iloc[:,5:17].as_matrix() <span class="comment">#训练样本特征</span></span><br><span class="line">y_test=data_test.iloc[:,4].as_matrix() <span class="comment">#测试样本标签列</span></span><br><span class="line">x_test=data_test.iloc[:,5:17].as_matrix() <span class="comment">#测试样本特征</span></span><br><span class="line"></span><br><span class="line">from keras.models import Sequential</span><br><span class="line">from keras.layers.core import Dense,Dropout,Activation</span><br><span class="line"></span><br><span class="line">model = Sequential() <span class="comment">#建立模型</span></span><br><span class="line">model.add(Dense(input_dim=11,output_dim=17))<span class="comment">#添加输入层、隐藏层的连接</span></span><br><span class="line">model.add(Activation(<span class="string">'relu'</span>)) <span class="comment">#以Relu函数为激活函数</span></span><br><span class="line">model.add(Dense(input_dim=17,output_dim=10)) <span class="comment">#添加隐藏层、隐藏层的链接</span></span><br><span class="line">model.add(Activation(<span class="string">'relu'</span>)) <span class="comment">#以Relu函数为激活函数</span></span><br><span class="line">model.add(Dense(input_dim=10,output_dim=1))  <span class="comment">#添加隐藏层、输出层的连接</span></span><br><span class="line">model.add(Activation(<span class="string">'sigmoid'</span>)) <span class="comment">#以sigmoid函数为激活函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#编译模型，损失函数为binary_crossentropy,用adam法求解</span></span><br><span class="line">model.compile(loss=<span class="string">'binary_crossentropy'</span>,optimizer=<span class="string">'adam'</span>,metrics=[<span class="string">'accuracy'</span>])</span><br><span class="line"></span><br><span class="line">model.fit(x_train,y_train,nb_epoch=100,batch_size=2) <span class="comment">#训练模型 batch=2时准确率85.7</span></span><br><span class="line">model.save_weights(<span class="string">'../tmp/net.model'</span>) <span class="comment">#保存模型参数</span></span><br><span class="line"><span class="string">''</span><span class="string">'</span></span><br><span class="line"><span class="string">#导入训练好的model weights</span></span><br><span class="line"><span class="string">weight_file='</span>../tmp/net.model<span class="string">'</span></span><br><span class="line"><span class="string">model.load_weights(weight_file)</span></span><br><span class="line"><span class="string">'</span><span class="string">''</span></span><br><span class="line">r=pd.DataFrame(model.predict_classes(x_test),columns=[u<span class="string">'预测结果'</span>])</span><br><span class="line">pd.concat([data_test.iloc[:,:5],r],axis=1).to_excel(testoutputfile)</span><br><span class="line">model.predict(x_test)</span><br></pre></td></tr></table></figure></p>
+<h1 id="六、模型评价"><a href="#六、模型评价" class="headerlink" title="六、模型评价"></a>六、模型评价</h1><p>该模型预测结果比较如下，总共识别了21条数据，准确识别了18条数据，正确率为85.7%<br><img src="/家用电器用户行为分析与事件识别/model_result.png" width="400" height="400"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>鼓励我一下吧，我会有更多原创的！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="wltongxue 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="wltongxue 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+      <div id="bitcoin" style="display: inline-block">
+        <img id="bitcoin_qr" src="/images/bitcoin.png" alt="wltongxue 比特币">
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/分类预测问题/" rel="tag"># 分类预测问题</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/SVM/" rel="next" title="SVM">
+                <i class="fa fa-chevron-left"></i> SVM
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTE1Mi8xNzcwMA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">wltongxue</p>
+              <p class="site-description motion-element" itemprop="description">wltongxue的个人网站，希望给大家提供解决问题的方法和思考问题的模式。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/wltongxue" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="wltongxue@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://oxsec.com/?p=1" title="大水牛‘s blog" target="_blank">大水牛‘s blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://chenzy96.github.io" title="国民大可爱‘s blog" target="_blank">国民大可爱‘s blog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、挖掘目标"><span class="nav-number">1.</span> <span class="nav-text">一、挖掘目标</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、数据抽取"><span class="nav-number">2.</span> <span class="nav-text">二、数据抽取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、数据探索"><span class="nav-number">3.</span> <span class="nav-text">三、数据探索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、数据预处理"><span class="nav-number">4.</span> <span class="nav-text">四、数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据规约"><span class="nav-number">4.1.</span> <span class="nav-text">数据规约</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据变换"><span class="nav-number">4.2.</span> <span class="nav-text">数据变换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-一次完整用水事件的划分模型"><span class="nav-number">4.2.1.</span> <span class="nav-text">1)    一次完整用水事件的划分模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-用水事件阈值寻优模型"><span class="nav-number">4.2.2.</span> <span class="nav-text">2)    用水事件阈值寻优模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）属性构造"><span class="nav-number">4.2.3.</span> <span class="nav-text">3）属性构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-筛选得“候选洗浴事件”"><span class="nav-number">4.2.4.</span> <span class="nav-text">4)    筛选得“候选洗浴事件”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据清洗"><span class="nav-number">4.3.</span> <span class="nav-text">数据清洗</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、模型构建"><span class="nav-number">5.</span> <span class="nav-text">五、模型构建</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、模型评价"><span class="nav-number">6.</span> <span class="nav-text">六、模型评价</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wltongxue</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      本站访客数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      本站总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("SN2WextlXExc5bhvW6gzeDn3-gzGzoHsz", "hL1seDeudosTFHN1X1NfzBhr");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
